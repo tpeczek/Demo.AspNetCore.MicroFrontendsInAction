@@ -1,0 +1,13 @@
+﻿{
+  "profiles": {
+    "Demo.AspNetCore.MicroFrontendsInAction.Decide": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "launchBrowser": true,
+      "applicationUrl": "http://localhost:3001",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}
