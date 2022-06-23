@@ -1,16 +1,20 @@
 name: 03-composition-via-ajax
 on: workflow_dispatch
 jobs:
-  build:
+  create-azure-resources:
     runs-on: ubuntu-latest
     steps:
+    - name: Set Environment Variables
+      run: |
+        echo "LOCATION=westeurope" >> $GITHUB_ENV
+        echo "RESOURCE_GROUP=rg-micro-frontends-in-action-03" >> $GITHUB_ENV
+      shell: bash
     - name: Log in to Azure
       uses: azure/login@v1
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
-    - name: 'Test az commands'
-      run: |
-        az account show
+    - name: Create Resource Group
+      run: az group create -l ${LOCATION} -g ${RESOURCE_GROUP}
     - name: Log Out From Azure
       run: |
         az logout
