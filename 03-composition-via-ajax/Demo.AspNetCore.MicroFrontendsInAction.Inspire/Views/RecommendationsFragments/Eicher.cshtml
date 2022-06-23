@@ -1,0 +1,11 @@
+﻿@using Microsoft.Extensions.Configuration
+@inject IConfiguration Configuration
+@{string decideServiceUrl = Configuration["DECIDE_SERVICE_URL"];}
+<link href="@(Context.Request.Scheme + "://" + Context.Request.Host + "/static/fragment.css")" rel="stylesheet" />
+<div class="inspire_fragment">
+  <h2 class="inspire_headline">Recommendations</h2>
+  <div class="inspire_recommendations">
+    <a href="@(decideServiceUrl + "/product/porsche")"><img src="https://mi-fr.org/img/porsche.svg" /></a>
+    <a href="@(decideServiceUrl + "/product/fendt")"><img src="https://mi-fr.org/img/fendt.svg" /></a>
+  </div>
+</div>

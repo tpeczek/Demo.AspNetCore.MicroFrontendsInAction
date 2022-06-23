@@ -11,15 +11,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Update="wwwroot\product\eicher.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Update="wwwroot\product\fendt.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Update="wwwroot\product\porsche.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Update="wwwroot\static\outlines.css">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
