@@ -12,7 +12,6 @@ app.UseRewriter(new RewriteOptions()
 
 app.UseStaticFiles(new StaticFileOptions
 {
-    ServeUnknownFileTypes = true,
     OnPrepareResponse = (ctx) =>
     {
         ctx.Context.Response.Headers.Append("Access-Control-Allow-Origin", "http://localhost:3001");
