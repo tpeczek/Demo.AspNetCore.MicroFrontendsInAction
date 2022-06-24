@@ -1,12 +1,13 @@
 name: 03-composition-via-ajax
 on: workflow_dispatch
+env:
+  RESOURCE_GROUP: rg-micro-frontends-in-action-03
 jobs:
   deploy-to-container-apps:
     runs-on: ubuntu-latest
     steps:
     - name: Set Environment Variables
       run: |
-        echo "RESOURCE_GROUP=rg-micro-frontends-in-action-03" >> $GITHUB_ENV
         echo "CONTAINER_REGISTRY=crmicrofrontendsinaction03" >> $GITHUB_ENV
         echo "CONTAINERAPPS_ENVIRONMENT=ca-env-micro-frontends-in-action-03" >> $GITHUB_ENV
         echo "DECIDE_CONTAINERAPP=ca-app-decide" >> $GITHUB_ENV
