@@ -18,7 +18,7 @@ jobs:
     - name: Create Resource Group
       run: az group create -l ${LOCATION} -g ${RESOURCE_GROUP}
     - name: Create Container Registry
-      run: az acr create -n ${CONTAINER_REGISTRY} -l ${LOCATION} -g ${RESOURCE_GROUP} --sku Basic --admin-enabled true
+      run: az acr create -n ${CONTAINER_REGISTRY} -l ${LOCATION} -g ${RESOURCE_GROUP} --sku Basic
     - name: Create Container Apps Enviroment
       run: |
         az extension add --n containerapp --upgrade
@@ -75,7 +75,9 @@ jobs:
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
     - name: Log in to Container Registry
-      run: az acr login -n ${CONTAINER_REGISTRY}
+      run: |
+        az acr login -n ${CONTAINER_REGISTRY}
+        az acr update -n ${CONTAINER_REGISTRY} --admin-enabled true
     - name: Deploy Services to Container Apps Enviroment
       run: |
         az extension add --n containerapp --upgrade
