@@ -1,7 +1,7 @@
 name: 03-composition-via-ajax
 on: workflow_dispatch
 jobs:
-deploy-to-container-apps:
+  deploy-to-container-apps:
     runs-on: ubuntu-latest
     steps:
     - name: Set Environment Variables
