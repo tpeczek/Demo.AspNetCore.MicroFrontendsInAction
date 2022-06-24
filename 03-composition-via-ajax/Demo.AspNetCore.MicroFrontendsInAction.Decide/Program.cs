@@ -9,5 +9,6 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.MapControllerRoute(name: "products", pattern: "product/{action}", defaults: new { controller = "Products" });
+app.MapControllerRoute(name: "default", pattern: "{controller=Products}/{action=Porsche}");
 
 app.Run();
