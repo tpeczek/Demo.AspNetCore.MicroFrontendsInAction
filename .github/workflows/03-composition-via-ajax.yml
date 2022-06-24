@@ -31,6 +31,8 @@ jobs:
         echo 'INSPIRE_CONTAINERAPP_FQDN<<EOF' >> $GITHUB_ENV
         az containerapp ingress show -n ${INSPIRE_CONTAINERAPP} -g ${RESOURCE_GROUP} --query fqdn >> $GITHUB_ENV
         echo 'EOF' >> $GITHUB_ENV
-        echo ${DECIDE_CONTAINERAPP_FQDN}
-        echo ${INSPIRE_CONTAINERAPP_FQDN}
       shell: bash
+    - name: Configure Services URLs
+      run: |
+        az containerapp update -n ${DECIDE_CONTAINERAPP} -g ${RESOURCE_GROUP} --set-env-vars INSPIRE_SERVICE_URL=https://${INSPIRE_CONTAINERAPP_FQDN}
+        az containerapp update -n ${INSPIRE_CONTAINERAPP} -g ${RESOURCE_GROUP} --set-env-vars DECIDE_SERVICE_URL=https://${DECIDE_CONTAINERAPP_FQDN}
