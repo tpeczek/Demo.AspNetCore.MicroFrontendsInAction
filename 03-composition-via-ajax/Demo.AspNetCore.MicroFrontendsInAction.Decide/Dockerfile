@@ -1,19 +1,15 @@
-FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
-WORKDIR /app
-EXPOSE 80
-
-FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build-env
 WORKDIR /src
-COPY . ./
 
+COPY *.csproj ./
 RUN dotnet restore
 
-RUN dotnet build -c Release -o /app/build
-
-FROM build AS publish
+COPY . .
 RUN dotnet publish -c Release -o /app/publish
 
-FROM base AS final
+FROM mcr.microsoft.com/dotnet/aspnet:6.0
 WORKDIR /app
-COPY --from=publish /app/publish .
+COPY --from=build-env /app/publish .
+EXPOSE 3001
+ENV ASPNETCORE_URLS=http://+:3001
 ENTRYPOINT ["dotnet", "Demo.AspNetCore.MicroFrontendsInAction.Decide.dll"]
