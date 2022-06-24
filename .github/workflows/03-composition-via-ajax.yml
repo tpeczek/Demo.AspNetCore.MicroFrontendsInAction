@@ -59,7 +59,7 @@ jobs:
         az cache purge
         az account clear
   deploy-services:
-    needs: [create-azure-resources]
+    needs: [create-azure-resources, build-and-push-images]
     runs-on: ubuntu-latest
     steps:
     - name: Set Environment Variables
