@@ -34,5 +34,5 @@ jobs:
       shell: bash
     - name: Configure Services URLs
       run: |
-        az containerapp update -n ${DECIDE_CONTAINERAPP} -g ${RESOURCE_GROUP} --set-env-vars INSPIRE_SERVICE_URL=https://${{ fromJSON(INSPIRE_CONTAINERAPP_INGRESS_JSON).fqdn }}
-        az containerapp update -n ${INSPIRE_CONTAINERAPP} -g ${RESOURCE_GROUP} --set-env-vars DECIDE_SERVICE_URL=https://${{ fromJSON(DECIDE_CONTAINERAPP_INGRESS_JSON).fqdn }}
+        az containerapp update -n ${DECIDE_CONTAINERAPP} -g ${RESOURCE_GROUP} --set-env-vars INSPIRE_SERVICE_URL=https://${{ fromJSON(env.INSPIRE_CONTAINERAPP_INGRESS_JSON).fqdn }}
+        az containerapp update -n ${INSPIRE_CONTAINERAPP} -g ${RESOURCE_GROUP} --set-env-vars DECIDE_SERVICE_URL=https://${{ fromJSON(env.DECIDE_CONTAINERAPP_INGRESS_JSON).fqdn }}
