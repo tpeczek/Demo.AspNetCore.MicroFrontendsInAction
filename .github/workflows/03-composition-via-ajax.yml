@@ -58,13 +58,13 @@ jobs:
         az logout
         az cache purge
         az account clear
-  deploy-services:
+  deploy-to-container-apps:
     needs: [create-azure-resources, build-and-push-images]
     runs-on: ubuntu-latest
     steps:
     - name: Set Environment Variables
       run: |
-        echo "RESOURCE_GROUP=rg-micro-frontends-in-action-03" >> $GITHUB_EN
+        echo "RESOURCE_GROUP=rg-micro-frontends-in-action-03" >> $GITHUB_ENV
         echo "CONTAINER_REGISTRY=crmicrofrontendsinaction03" >> $GITHUB_ENV
         echo "CONTAINERAPPS_ENVIRONMENT=ca-env-micro-frontends-in-action-03" >> $GITHUB_ENV
         echo "DECIDE_CONTAINERAPP=ca-app-decide" >> $GITHUB_ENV
