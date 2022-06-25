@@ -1,23 +1,28 @@
-using Microsoft.AspNetCore.Rewrite;
-
 var builder = WebApplication.CreateBuilder(args);
+
+string decideServiceCorsPolicyName = "decide-service-cors-policy";
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: decideServiceCorsPolicyName, policy =>
+    {
+        policy.WithOrigins(builder.Configuration["DECIDE_SERVICE_URL"]);
+        policy.AllowAnyHeader();
+        policy.WithMethods("GET");
+    });
+});
+
+builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
-app.UseRewriter(new RewriteOptions()
-    .AddRedirect("recommendations/(.*).html", "recommendations/$1")
-    .AddRewrite("recommendations/(.*)", "recommendations/$1.html", skipRemainingRules: true)
-    .AddRedirect("fragment/recommendations/(.*).html", "fragment/recommendations/$1")
-    .AddRewrite("fragment/recommendations/(.*)", "fragment/recommendations/$1.html", skipRemainingRules: true));
+app.UseStaticFiles();
 
-app.UseStaticFiles(new StaticFileOptions
-{
-    OnPrepareResponse = (ctx) =>
-    {
-        ctx.Context.Response.Headers.Append("Access-Control-Allow-Origin", "http://localhost:3001");
-        ctx.Context.Response.Headers.Append("Access-Control-Allow-Headers", "*");
-        ctx.Context.Response.Headers.Append("Access-Control-Allow-Methods", "GET");
-    }
-});
+app.UseRouting();
+
+app.UseCors(decideServiceCorsPolicyName);
+
+app.MapControllerRoute(name: "recommendations-fragments", pattern: "fragment/recommendations/{action}", defaults: new { controller = "RecommendationsFragments", action = "Article" });
+app.MapControllerRoute(name: "recommendations", pattern: "recommendations/{action}", defaults: new { controller = "Recommendations" });
 
 app.Run();

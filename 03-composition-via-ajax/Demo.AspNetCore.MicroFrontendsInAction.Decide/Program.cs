@@ -1,12 +1,14 @@
-using Microsoft.AspNetCore.Rewrite;
-
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddControllersWithViews();
+
 var app = builder.Build();
 
-app.UseRewriter(new RewriteOptions()
-    .AddRedirect("product/(.*).html", "product/$1")
-    .AddRewrite("product/(.*)", "product/$1.html", skipRemainingRules: true));
-
 app.UseStaticFiles();
+
+app.UseRouting();
+
+app.MapControllerRoute(name: "products", pattern: "product/{action}", defaults: new { controller = "Products" });
+app.MapControllerRoute(name: "default", pattern: "{controller=Products}/{action=Porsche}");
 
 app.Run();

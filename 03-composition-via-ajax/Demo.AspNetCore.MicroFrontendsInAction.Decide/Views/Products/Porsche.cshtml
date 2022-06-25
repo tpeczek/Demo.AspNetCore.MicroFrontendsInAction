@@ -1,3 +1,6 @@
+﻿@using Microsoft.Extensions.Configuration
+@inject IConfiguration Configuration
+@{string inspireServiceUrl = Configuration["INSPIRE_SERVICE_URL"];}
 <html>
   <head>
     <title>Porsche-Diesel Master 419</title>
@@ -10,13 +13,8 @@
       <h2 class="decide_headline">Porsche-Diesel Master 419</h2>
       <img class="decide_image" src="https://mi-fr.org/img/porsche.svg" />
     </div>
-    <aside
-      class="decide_recos"
-      data-fragment="http://localhost:3002/fragment/recommendations/porsche"
-    >
-      <a href="http://localhost:3002/recommendations/porsche">
-        Show Recommendations
-      </a>
+    <aside class="decide_recos"data-fragment="@(inspireServiceUrl + "/fragment/recommendations/porsche")">
+      <a href="@(inspireServiceUrl + "/recommendations/porsche")">Show Recommendations</a>
     </aside>
     <script src="/static/page.js" async></script>
   </body>
