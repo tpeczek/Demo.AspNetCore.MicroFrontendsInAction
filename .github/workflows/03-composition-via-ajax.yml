@@ -64,9 +64,9 @@ jobs:
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
     - name: Log in to Container Registry
-      run: |
-        az acr login -n ${CONTAINER_REGISTRY}
-        az acr update -n ${CONTAINER_REGISTRY} --admin-enabled true
+      run: az acr login -n ${CONTAINER_REGISTRY}
+    - name: Enable the Adminr User for Container Registry
+      run: az acr update -n ${CONTAINER_REGISTRY} --admin-enabled true
     - name: Deploy Services to Container Apps Enviroment
       run: |
         az extension add --n containerapp --upgrade
