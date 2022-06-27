@@ -31,7 +31,7 @@ namespace Demo.AspNetCore.MicroFrontendsInAction.Proxy
         public static void MapForwarder(this IEndpointRouteBuilder endpoints, string pattern, string serviceUrl)
         {
             var forwarder = endpoints.ServiceProvider.GetRequiredService<IHttpForwarder>();
-            var requestConfig = new ForwarderRequestConfig { ActivityTimeout = TimeSpan.FromMilliseconds(200) };
+            var requestConfig = new ForwarderRequestConfig { ActivityTimeout = TimeSpan.FromMilliseconds(500) };
 
             endpoints.Map(pattern, async httpContext =>
             {

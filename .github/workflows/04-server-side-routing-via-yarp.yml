@@ -69,7 +69,7 @@ jobs:
     - name: Log in to Container Registry
       run: az acr login -n ${CONTAINER_REGISTRY}
     - name: Enable the Admin User for Container Registry
-      run: az acr update -n ${CONTAINER_REGISTRY} --admin-enabled true
+      run: az acr update -n ${CONTAINER_REGISTRY} -g ${RESOURCE_GROUP} --admin-enabled true
     - name: Deploy Services to Container Apps Enviroment
       run: |
         az extension add --n containerapp --upgrade
@@ -84,7 +84,7 @@ jobs:
         az containerapp ingress show -n ${INSPIRE_CONTAINERAPP} -g ${RESOURCE_GROUP} >> $GITHUB_ENV
         echo 'EOF' >> $GITHUB_ENV
       shell: bash
-    - name: Configure Services URLs
+    - name: Deploy Proxy to Container Apps Enviroment
       run: |
         az containerapp create -n ${PROXY_CONTAINERAPP} -i ${CONTAINER_REGISTRY}.azurecr.io/proxy:${{ github.sha }} -g ${RESOURCE_GROUP} --environment ${CONTAINERAPPS_ENVIRONMENT} --ingress external --target-port 3000 --min-replicas 1 --registry-server ${CONTAINER_REGISTRY}.azurecr.io --env-vars INSPIRE_SERVICE_URL=https://${{ fromJSON(env.INSPIRE_CONTAINERAPP_INGRESS_JSON).fqdn }} DECIDE_SERVICE_URL=https://${{ fromJSON(env.DECIDE_CONTAINERAPP_INGRESS_JSON).fqdn }}
     - name: Log Out From Azure
