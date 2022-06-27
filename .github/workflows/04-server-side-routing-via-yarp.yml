@@ -1,0 +1,94 @@
+name: 04-server-side-routing-via-yarp
+on: workflow_dispatch
+env:
+  SAMPLE: 04-server-side-routing-via-yarp
+  LOCATION: westeurope
+  RESOURCE_GROUP: rg-micro-frontends-in-action-04
+  CONTAINER_REGISTRY: crmicrofrontendsinaction04
+  CONTAINERAPPS_ENVIRONMENT: ca-env-micro-frontends-in-action-04
+  DECIDE_CONTAINERAPP: ca-app-decide
+  INSPIRE_CONTAINERAPP: ca-app-inspire
+  PROXY_CONTAINERAPP: ca-app-proxy
+jobs:
+  create-azure-resources:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Log in to Azure
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+    - name: Create Resource Group
+      run: az group create -l ${LOCATION} -g ${RESOURCE_GROUP}
+    - name: Create Container Registry
+      run: az acr create -n ${CONTAINER_REGISTRY} -l ${LOCATION} -g ${RESOURCE_GROUP} --sku Basic
+    - name: Create Container Apps Enviroment
+      run: |
+        az extension add --n containerapp --upgrade
+        az containerapp env create -n ${CONTAINERAPPS_ENVIRONMENT} -l ${LOCATION} -g ${RESOURCE_GROUP}
+    - name: Log Out From Azure
+      run: |
+        az logout
+        az cache purge
+        az account clear
+  build-and-push-images:
+    needs: [create-azure-resources]
+    runs-on: ubuntu-latest
+    steps:
+    - name: Log in to Azure
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+    - name: Log in to Container Registry
+      run: az acr login -n ${CONTAINER_REGISTRY}
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Build Docker Images
+      run: |
+        docker build ${SAMPLE}/Demo.AspNetCore.MicroFrontendsInAction.Decide/ -t ${CONTAINER_REGISTRY}.azurecr.io/decide:${{ github.sha }}
+        docker build ${SAMPLE}/Demo.AspNetCore.MicroFrontendsInAction.Inspire/ -t ${CONTAINER_REGISTRY}.azurecr.io/inspire:${{ github.sha }}
+        docker build ${SAMPLE}/Demo.AspNetCore.MicroFrontendsInAction.Proxy/ -t ${CONTAINER_REGISTRY}.azurecr.io/proxy:${{ github.sha }}
+    - name: Push Docker Images to Container Registry
+      run: |
+        docker push ${CONTAINER_REGISTRY}.azurecr.io/decide:${{ github.sha }}
+        docker push ${CONTAINER_REGISTRY}.azurecr.io/inspire:${{ github.sha }}
+        docker push ${CONTAINER_REGISTRY}.azurecr.io/proxy:${{ github.sha }}
+    - name: Log Out From Azure
+      run: |
+        docker logout
+        az logout
+        az cache purge
+        az account clear
+  deploy-to-container-apps:
+    needs: [create-azure-resources, build-and-push-images]
+    runs-on: ubuntu-latest
+    steps:
+    - name: Log in to Azure
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+    - name: Log in to Container Registry
+      run: az acr login -n ${CONTAINER_REGISTRY}
+    - name: Enable the Admin User for Container Registry
+      run: az acr update -n ${CONTAINER_REGISTRY} --admin-enabled true
+    - name: Deploy Services to Container Apps Enviroment
+      run: |
+        az extension add --n containerapp --upgrade
+        az containerapp create -n ${DECIDE_CONTAINERAPP} -i ${CONTAINER_REGISTRY}.azurecr.io/decide:${{ github.sha }} -g ${RESOURCE_GROUP} --environment ${CONTAINERAPPS_ENVIRONMENT} --ingress internal --target-port 3001 --min-replicas 1 --registry-server ${CONTAINER_REGISTRY}.azurecr.io
+        az containerapp create -n ${INSPIRE_CONTAINERAPP} -i ${CONTAINER_REGISTRY}.azurecr.io/inspire:${{ github.sha }} -g ${RESOURCE_GROUP} --environment ${CONTAINERAPPS_ENVIRONMENT} --ingress internal --target-port 3002 --min-replicas 1 --registry-server ${CONTAINER_REGISTRY}.azurecr.io
+    - name: Get Services Ingress
+      run: |
+        echo 'DECIDE_CONTAINERAPP_INGRESS_JSON<<EOF' >> $GITHUB_ENV
+        az containerapp ingress show -n ${DECIDE_CONTAINERAPP} -g ${RESOURCE_GROUP} >> $GITHUB_ENV
+        echo 'EOF' >> $GITHUB_ENV
+        echo 'INSPIRE_CONTAINERAPP_INGRESS_JSON<<EOF' >> $GITHUB_ENV
+        az containerapp ingress show -n ${INSPIRE_CONTAINERAPP} -g ${RESOURCE_GROUP} >> $GITHUB_ENV
+        echo 'EOF' >> $GITHUB_ENV
+      shell: bash
+    - name: Configure Services URLs
+      run: |
+        az containerapp create -n ${PROXY_CONTAINERAPP} -i ${CONTAINER_REGISTRY}.azurecr.io/proxy:${{ github.sha }} -g ${RESOURCE_GROUP} --environment ${CONTAINERAPPS_ENVIRONMENT} --ingress external --target-port 3000 --min-replicas 1 --registry-server ${CONTAINER_REGISTRY}.azurecr.io --env-vars INSPIRE_SERVICE_URL=https://${{ fromJSON(env.INSPIRE_CONTAINERAPP_INGRESS_JSON).fqdn }} DECIDE_SERVICE_URL=https://${{ fromJSON(env.DECIDE_CONTAINERAPP_INGRESS_JSON).fqdn }}
+    - name: Log Out From Azure
+      run: |
+        az logout
+        az cache purge
+        az account clear
