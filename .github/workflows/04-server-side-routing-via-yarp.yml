@@ -69,7 +69,9 @@ jobs:
     - name: Log in to Container Registry
       run: az acr login -n ${CONTAINER_REGISTRY}
     - name: Enable the Admin User for Container Registry
-      run: az acr update -n ${CONTAINER_REGISTRY} -g ${RESOURCE_GROUP} --admin-enabled true
+      run: |
+        az acr update -n ${CONTAINER_REGISTRY} -g ${RESOURCE_GROUP} --admin-enabled true
+        az acr credential show -n ${CONTAINER_REGISTRY} -g ${RESOURCE_GROUP} --query username
     - name: Deploy Services to Container Apps Enviroment
       run: |
         az extension add --n containerapp --upgrade
