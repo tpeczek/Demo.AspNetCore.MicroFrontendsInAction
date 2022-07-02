@@ -21,26 +21,32 @@ namespace Demo.AspNetCore.MicroFrontendsInAction.Proxy.Transforms
         {
             if ((transformBuildContext.Route.Metadata is not null) && transformBuildContext.Route.Metadata.ContainsKey(SSI_METADATA_FLAG) && (transformBuildContext.Route.Metadata[SSI_METADATA_FLAG] == SSI_METADATA_FLAG_ON))
             {
-                transformBuildContext.AddResponseTransform(async responseContext =>
-                {
-                    if (responseContext.ProxyResponse is not null)
-                    {
-                        Stream proxyResponseContentStream = await responseContext.ProxyResponse.Content.ReadAsStreamAsync();
+                transformBuildContext.AddResponseTransform(TransformResponse);
+            }
+        }
 
-                        using StreamReader proxyResponseContentReader = new StreamReader(proxyResponseContentStream);
+        private async ValueTask TransformResponse(ResponseTransformContext responseContext)
+        {
+            if (responseContext.ProxyResponse is null)
+            {
+                return;
+            }
 
-                        string proxyResponseContent = await proxyResponseContentReader.ReadToEndAsync();
+            Stream proxyResponseContentStream = await responseContext.ProxyResponse.Content.ReadAsStreamAsync();
 
-                        if (!String.IsNullOrEmpty(proxyResponseContent))
-                        {
-                            responseContext.SuppressResponseBody = true;
+            using StreamReader proxyResponseContentReader = new StreamReader(proxyResponseContentStream);
 
-                            byte[] proxyResponseContentBytes = Encoding.UTF8.GetBytes(proxyResponseContent);
-                            responseContext.HttpContext.Response.ContentLength = proxyResponseContentBytes.Length;
-                            await responseContext.HttpContext.Response.Body.WriteAsync(proxyResponseContentBytes);
-                        }
-                    }
-                });
+            string proxyResponseContent = await proxyResponseContentReader.ReadToEndAsync();
+
+            if (!String.IsNullOrEmpty(proxyResponseContent))
+            {
+                IList<ISsiDirective> ssiDirectives = SsiParser.ParseDirectives(proxyResponseContent);
+
+                responseContext.SuppressResponseBody = true;
+
+                byte[] proxyResponseContentBytes = Encoding.UTF8.GetBytes(proxyResponseContent);
+                responseContext.HttpContext.Response.ContentLength = proxyResponseContentBytes.Length;
+                await responseContext.HttpContext.Response.Body.WriteAsync(proxyResponseContentBytes);
             }
         }
     }
