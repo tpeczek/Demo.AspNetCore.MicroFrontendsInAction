@@ -1,0 +1,15 @@
+﻿{
+  "profiles": {
+    "Demo.AspNetCore.MicroFrontendsInAction.Proxy": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "launchBrowser": true,
+      "applicationUrl": "http://localhost:3000",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "DECIDE_SERVICE_URL": "http://localhost:3001",
+        "INSPIRE_SERVICE_URL": "http://localhost:3002"
+      }
+    }
+  }
+}
