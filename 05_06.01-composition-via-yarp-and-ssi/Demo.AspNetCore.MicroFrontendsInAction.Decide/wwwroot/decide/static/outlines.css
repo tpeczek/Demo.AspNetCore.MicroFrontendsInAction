@@ -21,7 +21,7 @@ html::after {
 }
 
 .inspire_fragment::before {
-  content: "Team Inspire (AJAX) ";
+  content: "Team Inspire (Server Side Include)";
   display: block;
   background-color: #7c9b2f;
   color: white;

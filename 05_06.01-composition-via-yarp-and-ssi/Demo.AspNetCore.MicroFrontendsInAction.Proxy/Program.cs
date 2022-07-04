@@ -1,6 +1,6 @@
 using Yarp.ReverseProxy.Configuration;
 using Demo.AspNetCore.MicroFrontendsInAction.Proxy;
-using Demo.AspNetCore.MicroFrontendsInAction.Proxy.Transforms;
+using Demo.AspNetCore.MicroFrontendsInAction.Proxy.Transforms.Ssi;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +9,7 @@ var routes = new[]
     // Per service prefixes
     new RouteConfig { RouteId = Constants.ROOT_ROUTE_ID, ClusterId = Constants.DECIDE_CLUSTER_ID, Match = new RouteMatch { Path = "/" }, Metadata = SsiTransformProvider.SsiEnabledMetadata },
     // Per service prefixes
+    new RouteConfig { RouteId = Constants.DECIDE_ROUTE_ID + "-static", ClusterId = Constants.DECIDE_CLUSTER_ID, Match = new RouteMatch { Path = "/decide/static/{**catch-all}" } },
     new RouteConfig { RouteId = Constants.DECIDE_ROUTE_ID, ClusterId = Constants.DECIDE_CLUSTER_ID, Match = new RouteMatch { Path = "/decide/{**catch-all}" }, Metadata = SsiTransformProvider.SsiEnabledMetadata },
     new RouteConfig { RouteId = Constants.INSPIRE_ROUTE_IDE, ClusterId = Constants.INSPIRE_CLUSTER_ID, Match = new RouteMatch { Path = "/inspire/{**catch-all}" } },
     // Per page prefixes

@@ -1,19 +1,8 @@
 ﻿using System.Net;
 using System.Text.RegularExpressions;
 
-namespace Demo.AspNetCore.MicroFrontendsInAction.Proxy.Transforms
+namespace Demo.AspNetCore.MicroFrontendsInAction.Proxy.Transforms.Ssi.Parsing
 {
-    internal interface ISsiDirective
-    {
-        string Directive { get; }
-
-        public IReadOnlyDictionary<string, string> Parameters { get; }
-
-        public int Index { get; }
-
-        public int Length { get; }
-    }
-
     internal static class SsiParser
     {
         // <!--#directive parameter1="value1" parameter2="value2" ... -->
