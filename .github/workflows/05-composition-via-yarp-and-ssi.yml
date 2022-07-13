@@ -1,7 +1,7 @@
-name: 05_06.01-composition-via-yarp-and-ssi
+name: 05-composition-via-yarp-and-ssi
 on: workflow_dispatch
 env:
-  SAMPLE: 05_06.01-composition-via-yarp-and-ssi
+  SAMPLE: 05-composition-via-yarp-and-ssi
   LOCATION: westeurope
   RESOURCE_GROUP: rg-micro-frontends-in-action-05
   CONTAINER_REGISTRY: crmicrofrontendsinaction05
