@@ -1,6 +1,9 @@
 # Demo.AspNetCore.MicroFrontendsInAction
 
-Samples from the book [Micro Frontends in Action](https://www.manning.com/books/micro-frontends-in-action) implemented with ASP.NET Core.
+Samples from the book [Micro Frontends in Action](https://www.manning.com/books/micro-frontends-in-action) implemented with ASP.NET Core. You can read more here:
+
+- [Micro Frontends in Action With ASP.NET Core - Server-Side Routing via YARP in Azure Container Apps](https://www.tpeczek.com/2022/06/micro-frontends-in-action-with-aspnet.html)
+- [Micro Frontends in Action With ASP.NET Core - Composition via YARP Transforms and Server-Side Includes (SSI)](https://www.tpeczek.com/2022/07/micro-frontends-in-action-with-aspnet.html)
 
 ## Sponsor This Project
 
