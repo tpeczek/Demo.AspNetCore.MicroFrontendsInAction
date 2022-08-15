@@ -1,11 +1,12 @@
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build-env
 WORKDIR /src
 
-COPY *.csproj ./
-RUN dotnet restore
+COPY Frontend/*.csproj ./Frontend/
+COPY Service/*.csproj ./Service/
+RUN dotnet restore Service
 
 COPY . .
-RUN dotnet publish -c Release -o /app/publish
+RUN dotnet publish Service -c Release -o /app/publish
 
 FROM mcr.microsoft.com/dotnet/aspnet:6.0
 WORKDIR /app

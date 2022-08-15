@@ -47,7 +47,7 @@ jobs:
       run: |
         docker build ${SAMPLE}/Demo.AspNetCore.MicroFrontendsInAction.Decide/ -t ${CONTAINER_REGISTRY}.azurecr.io/decide:${{ github.sha }}
         docker build ${SAMPLE}/Demo.AspNetCore.MicroFrontendsInAction.Inspire/ -t ${CONTAINER_REGISTRY}.azurecr.io/inspire:${{ github.sha }}
-        docker build ${SAMPLE}/Demo.AspNetCore.MicroFrontendsInAction.Checkout/Service/ -t ${CONTAINER_REGISTRY}.azurecr.io/checkout:${{ github.sha }}
+        docker build ${SAMPLE}/Demo.AspNetCore.MicroFrontendsInAction.Checkout/ -t ${CONTAINER_REGISTRY}.azurecr.io/checkout:${{ github.sha }}
         docker build ${SAMPLE}/Demo.AspNetCore.MicroFrontendsInAction.Proxy/ -t ${CONTAINER_REGISTRY}.azurecr.io/proxy:${{ github.sha }}
     - name: Push Docker Images to Container Registry
       run: |
