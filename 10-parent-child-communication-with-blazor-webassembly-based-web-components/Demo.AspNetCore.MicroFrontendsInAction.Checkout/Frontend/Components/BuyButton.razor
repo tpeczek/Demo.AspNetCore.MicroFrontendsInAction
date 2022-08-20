@@ -1,0 +1,67 @@
+@using System.Timers
+
+<button type="button" @onclick="OnButtonClick">buy for @(String.IsNullOrWhiteSpace(Sku) || String.IsNullOrWhiteSpace(Edition)  ? "???" : _prices[Sku][Edition])</button>
+<div class="confirmation @(_confirmationVisible ? "confirmation-visible" : null)">
+    <div class="confirmation-icon">
+        ✔
+    </div>
+    <div class="confirmation-body">
+        <h5>Thank you ❤️</h5>
+        <p>You have bought @Sku.</p>
+    </div>
+</div>
+
+@code {
+    // Dictionary of tractor prices
+    private IDictionary<string, Dictionary<string, int>> _prices = new Dictionary<string, Dictionary<string, int>>
+    {
+        { "porsche", new Dictionary<string, int> { { "standard", 66 }, { "platinum", 966 } } },
+        { "fendt", new Dictionary<string, int> { { "standard", 54 }, { "platinum", 945 } }  },
+        { "eicher", new Dictionary<string, int> { { "standard", 58 }, { "platinum", 958 } }  }
+    };
+
+    private bool _confirmationVisible = false;
+    private Timer? _confirmationTimer;
+
+    [Parameter]
+    public string? Sku { get; set; }
+
+    [Parameter]
+    public string? Edition { get; set; }
+
+    private void OnButtonClick(MouseEventArgs e)
+    {
+        ShowConfirmation();
+
+        StateHasChanged();
+    }
+
+    private void ShowConfirmation()
+    {
+        _confirmationVisible = true;
+
+        if (_confirmationTimer is null)
+        {
+            _confirmationTimer = new Timer(5000);
+            _confirmationTimer.Elapsed += HideConfirmation;
+            _confirmationTimer.AutoReset = false;
+        }
+
+        if (_confirmationTimer.Enabled)
+        {
+            _confirmationTimer.Stop();
+            _confirmationTimer.Start();
+        }
+        else
+        {
+            _confirmationTimer.Start();
+        }
+    }
+
+    private void HideConfirmation(object source, ElapsedEventArgs args)
+    {
+        _confirmationVisible = false;
+
+        StateHasChanged();
+    }
+}

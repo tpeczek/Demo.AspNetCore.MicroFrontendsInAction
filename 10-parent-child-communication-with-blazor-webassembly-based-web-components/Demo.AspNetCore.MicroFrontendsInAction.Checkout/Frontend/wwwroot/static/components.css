@@ -1,0 +1,75 @@
+checkout-buy button {
+    width: 100%;
+    padding: 0.5em;
+    font-size: 1.5em;
+    border: none;
+    color: white;
+    border-radius: 0.25em;
+    background: rgb(75, 158, 204);
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    transition: transform 0.1s ease-in-out;
+  }
+  
+  checkout-buy button:hover {
+    background: rgb(75, 158, 204, 0.8);
+  }
+  
+  checkout-buy button:active {
+    background: gray;
+    transform: scale(0.98);
+  }
+
+  checkout-buy .confirmation {
+    display: none;
+    padding: 0.5em;
+    background-color: #28a745!important;
+    color: #fff;
+    z-index: 1;
+    position: absolute;
+    width: 25em;
+    top: 1em;
+    border-radius: 0.25em;
+    left: 50%;
+}
+
+checkout-buy .confirmation-icon {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0 0.5em;
+    font-size: 2em;
+}
+
+checkout-buy .confirmation-body {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding-left: 1em;
+}
+
+checkout-buy .confirmation-body h5 {
+  font-size: 1.5em;
+  margin-bottom: 0;
+}
+
+checkout-buy .confirmation-body p {
+  font-size: 1em;
+  margin-bottom: 0;
+}
+
+checkout-buy .confirmation-visible {
+  display: flex;
+  flex-direction: row;
+  animation: checkout-buy-toast-fadein 1.5s;
+}
+
+@keyframes checkout-buy-toast-fadein {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}

@@ -1,0 +1,55 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32505.173
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Demo.AspNetCore.MicroFrontendsInAction.Decide", "Demo.AspNetCore.MicroFrontendsInAction.Decide\Demo.AspNetCore.MicroFrontendsInAction.Decide.csproj", "{002111E7-99EF-4F46-808B-4F37E3AA861D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Demo.AspNetCore.MicroFrontendsInAction.Inspire", "Demo.AspNetCore.MicroFrontendsInAction.Inspire\Demo.AspNetCore.MicroFrontendsInAction.Inspire.csproj", "{E61B0C28-0441-46A8-BDDD-D5CBCE8964A0}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Demo.AspNetCore.MicroFrontendsInAction.Proxy", "Demo.AspNetCore.MicroFrontendsInAction.Proxy\Demo.AspNetCore.MicroFrontendsInAction.Proxy.csproj", "{3014E044-A0D8-4961-91C6-2DE80157C22B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Demo.AspNetCore.MicroFrontendsInAction.Checkout.Frontend", "Demo.AspNetCore.MicroFrontendsInAction.Checkout\Frontend\Demo.AspNetCore.MicroFrontendsInAction.Checkout.Frontend.csproj", "{3E6D06BA-CE96-4DC6-A6D8-2C6BAE73E1B8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Demo.AspNetCore.MicroFrontendsInAction.Checkout", "Demo.AspNetCore.MicroFrontendsInAction.Checkout", "{C72F2821-B79A-41B1-A9D4-12D438009B66}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Demo.AspNetCore.MicroFrontendsInAction.Checkout", "Demo.AspNetCore.MicroFrontendsInAction.Checkout\Service\Demo.AspNetCore.MicroFrontendsInAction.Checkout.csproj", "{7E0B7CB4-C77E-4D3C-BFCF-EC552D5F8ACB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{002111E7-99EF-4F46-808B-4F37E3AA861D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{002111E7-99EF-4F46-808B-4F37E3AA861D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{002111E7-99EF-4F46-808B-4F37E3AA861D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{002111E7-99EF-4F46-808B-4F37E3AA861D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E61B0C28-0441-46A8-BDDD-D5CBCE8964A0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E61B0C28-0441-46A8-BDDD-D5CBCE8964A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E61B0C28-0441-46A8-BDDD-D5CBCE8964A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E61B0C28-0441-46A8-BDDD-D5CBCE8964A0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3014E044-A0D8-4961-91C6-2DE80157C22B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3014E044-A0D8-4961-91C6-2DE80157C22B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3014E044-A0D8-4961-91C6-2DE80157C22B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3014E044-A0D8-4961-91C6-2DE80157C22B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3E6D06BA-CE96-4DC6-A6D8-2C6BAE73E1B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3E6D06BA-CE96-4DC6-A6D8-2C6BAE73E1B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3E6D06BA-CE96-4DC6-A6D8-2C6BAE73E1B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3E6D06BA-CE96-4DC6-A6D8-2C6BAE73E1B8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7E0B7CB4-C77E-4D3C-BFCF-EC552D5F8ACB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7E0B7CB4-C77E-4D3C-BFCF-EC552D5F8ACB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7E0B7CB4-C77E-4D3C-BFCF-EC552D5F8ACB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7E0B7CB4-C77E-4D3C-BFCF-EC552D5F8ACB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{3E6D06BA-CE96-4DC6-A6D8-2C6BAE73E1B8} = {C72F2821-B79A-41B1-A9D4-12D438009B66}
+		{7E0B7CB4-C77E-4D3C-BFCF-EC552D5F8ACB} = {C72F2821-B79A-41B1-A9D4-12D438009B66}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {78D5C3B1-35D8-479F-BF2D-EF861FF56281}
+	EndGlobalSection
+EndGlobal
