@@ -36,6 +36,42 @@ a {
   grid-column: 1 / span 3;
 }
 
+.decide_product {
+  position: relative;
+}
+
+@keyframes confirm {
+  0% {
+    transform: scale(0.4);
+    opacity: 0;
+  }
+  30% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  60% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+.decide_product--confirm::after {
+  position: absolute;
+  right: 0;
+  top: 0.5em;
+  left: 0;
+  text-align: center;
+  font-size: 10em;
+  color: rgb(28, 184, 65);
+  content: "✔";
+  text-shadow: 5px 5px 0px rgba(255, 255, 255, 0.8);
+  animation: confirm 2s ease-in-out forwards;
+}
+
 .decide_headline {
   font-size: 1.5em;
   text-align: center;
