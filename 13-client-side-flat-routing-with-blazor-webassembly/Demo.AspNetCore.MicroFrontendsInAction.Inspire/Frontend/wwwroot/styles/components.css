@@ -1,0 +1,8 @@
+inspire-home {
+    border: 3px solid #7c9b2f;
+}
+
+inspire-home::after {
+    content: "Team Inspire (Web Component)";
+    background: #7c9b2f;
+}

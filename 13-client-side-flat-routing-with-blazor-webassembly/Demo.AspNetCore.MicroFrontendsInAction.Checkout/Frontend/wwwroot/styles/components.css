@@ -1,0 +1,12 @@
+checkout-cart,
+checkout-pay,
+checkout-success {
+    border: 3px solid #5f9dc8;
+}
+
+checkout-cart::after,
+checkout-pay::after,
+checkout-success::after {
+    content: "Team Checkout (Web Component)";
+    background: #5f9dc8;
+}

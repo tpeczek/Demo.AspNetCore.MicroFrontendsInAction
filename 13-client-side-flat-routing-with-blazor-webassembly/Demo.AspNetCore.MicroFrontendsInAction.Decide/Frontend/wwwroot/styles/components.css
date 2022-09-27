@@ -1,0 +1,12 @@
+decide-product,
+decide-product,
+decide-product {
+    border: 3px solid #bc3630;
+}
+
+decide-product::after,
+decide-product::after,
+decide-product::after {
+    content: "Team Decide (Web Component)";
+    background: #bc3630;
+}
