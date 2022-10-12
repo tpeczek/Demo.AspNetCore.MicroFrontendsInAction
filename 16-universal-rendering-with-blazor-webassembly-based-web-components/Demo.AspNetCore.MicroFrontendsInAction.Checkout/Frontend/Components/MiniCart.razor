@@ -1,0 +1,41 @@
+@using System.Text.Json;
+
+@implements IAsyncDisposable
+
+@inject IBroadcastChannelService BroadcastChannelService
+
+@(_items.Count == 0  ? "Your cart is empty." : $"You've picked {_items.Count} tractors:")
+@foreach (var item in _items)
+{
+    <img src="https://mi-fr.org/img/@(item.Sku)_@(item.Edition).svg" />
+}
+
+@code {
+    private IList<CheckoutItem> _items = new List<CheckoutItem>();
+    private IBroadcastChannel? _broadcastChannel;
+    private JsonSerializerOptions _jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            _broadcastChannel = await BroadcastChannelService.CreateOrJoinAsync("checkout:item-added");
+            _broadcastChannel.Message += OnMessage;
+        }
+    }
+
+    private void OnMessage(object? sender, BroadcastChannelMessageEventArgs e)
+    {
+        _items.Add(e.Data.Deserialize<CheckoutItem>(_jsonSerializerOptions));
+
+        StateHasChanged();
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (_broadcastChannel is not null)
+        {
+            await _broadcastChannel.DisposeAsync();
+        }
+    }
+}
