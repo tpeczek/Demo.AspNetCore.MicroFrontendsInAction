@@ -6,6 +6,7 @@ Samples from the book [Micro Frontends in Action](https://www.manning.com/books/
 - [Micro Frontends in Action With ASP.NET Core - Composition via YARP Transforms and Server-Side Includes (SSI)](https://www.tpeczek.com/2022/07/micro-frontends-in-action-with-aspnet.html)
 - [Micro Frontends in Action With ASP.NET Core - Composition via Blazor WebAssembly Based Web Components](https://www.tpeczek.com/2022/08/micro-frontends-in-action-with-aspnet.html)
 - [Micro Frontends in Action With ASP.NET Core - Communication Patterns for Blazor WebAssembly Based Web Components](https://www.tpeczek.com/2022/09/micro-frontends-in-action-with-aspnet.html)
+- [Micro Frontends in Action With ASP.NET Core - Universal Rendering With Blazor WebAssembly Based Web Components](https://www.tpeczek.com/2022/10/micro-frontends-in-action-with-aspnet.html)
 
 ## Sponsor This Project
 
