@@ -28,7 +28,7 @@ jobs:
         region: ${{ env.LOCATION }}
         subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
         template: ./bicep-modules/micro-frontends-in-action-infrastructure.bicep
-        deploymentName: 'micro-frontends-in-action-${{ env.SAMPLE }}'
+        deploymentName: 'micro-frontends-in-action-10'
         parameters: 'resourceGroupName=${{ env.RESOURCE_GROUP }} resourceGroupLocation=${{ env.LOCATION }} managedIdentityName=${{ env.MANAGED_IDENTITY }} containerRegistryName=${{ env.CONTAINER_REGISTRY }} containerAppsEnvironmentName=${{ env.CONTAINERAPPS_ENVIRONMENT }}'
     - name: Log Out From Azure
       run: |
