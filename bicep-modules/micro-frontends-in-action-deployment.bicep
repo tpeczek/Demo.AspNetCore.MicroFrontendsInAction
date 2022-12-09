@@ -49,7 +49,7 @@ resource microFrontendsProxyContainerApp 'Microsoft.App/containerApps@2022-06-01
       registries: [
         {
           identity: managedIdentity.id
-          server: containerRegistryName
+          server: '${containerRegistryName}.azurecr.io'
         }
       ]
     }
