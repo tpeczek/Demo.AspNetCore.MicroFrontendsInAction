@@ -57,7 +57,7 @@ resource microFrontendsProxyContainerApp 'Microsoft.App/containerApps@2022-06-01
       containers: [
         {
           name: microFrontendsProxyContainerAppDetails.imageName
-          image: '${containerRegistryName}.azurecr.io/${microFrontendsProxyContainerAppDetails.imageName}:${microFrontendsProxyContainerAppDetails.containerAppImageTag}'
+          image: '${containerRegistryName}.azurecr.io/${microFrontendsProxyContainerAppDetails.imageName}:${microFrontendsProxyContainerAppDetails.imageTag}'
           env: [for (microFrontendsContainerAppDetails, i) in microFrontendsContainerAppsDetails: {
             name: microFrontendsContainerAppDetails.urlVariableName
             value: 'https://${microFrontendsContainerAppsFqdns[i]}'
