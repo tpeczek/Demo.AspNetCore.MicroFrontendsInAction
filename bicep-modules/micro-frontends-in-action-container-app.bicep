@@ -30,7 +30,7 @@ resource containerApp 'Microsoft.App/containerApps@2022-06-01-preview' = {
       registries: [
         {
           identity: managedIdentityId
-          server: containerRegistryName
+          server: '${containerRegistryName}.azurecr.io'
         }
       ]
     }
