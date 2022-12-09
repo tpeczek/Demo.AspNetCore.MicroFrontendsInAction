@@ -7,7 +7,8 @@ env:
   MANAGED_IDENTITY: id-micro-frontends-in-action-04
   CONTAINER_REGISTRY: crmicrofrontendsinaction04
   CONTAINERAPPS_ENVIRONMENT: ca-env-micro-frontends-in-action-04
-  MICROFRONTENDS_CONTAINERAPPS: "[{name='ca-app-decide',imageName="decide",port=3001},{name='ca-app-inspire',imageName="inspire",port=3002}]'
+  DECIDE_CONTAINERAPP: ca-app-decide
+  INSPIRE_CONTAINERAPP: ca-app-inspire
   PROXY_CONTAINERAPP: ca-app-proxy
 jobs:
   deploy-infrastructure:
@@ -77,7 +78,7 @@ jobs:
         resourceGroupName: ${{ env.RESOURCE_GROUP }}
         template: ./bicep-modules/micro-frontends-in-action-deployment.bicep
         deploymentName: 'micro-frontends-in-action-04-cd'
-        parameters: 'location=${{ env.LOCATION }} managedIdentityName=${{ env.MANAGED_IDENTITY }} containerRegistryName=${{ env.CONTAINER_REGISTRY }} containerAppsEnvironmentName=${{ env.CONTAINERAPPS_ENVIRONMENT }} microFrontendsContainerAppsDetails="${{ env.MICROFRONTENDS_CONTAINERAPPS }}"'
+        parameters: 'location=${{ env.LOCATION }} managedIdentityName=${{ env.MANAGED_IDENTITY }} containerRegistryName=${{ env.CONTAINER_REGISTRY }} containerAppsEnvironmentName=${{ env.CONTAINERAPPS_ENVIRONMENT }} microFrontendsContainerAppsDetails="[''{''name=\"${{ env.DECIDE_CONTAINERAPP }}\",imageName=\"decide\",imageTag=\"${{ github.sha }}\",port=3001},\{name=\"${{ env.INSPIRE_CONTAINERAPP }}\",imageName=\"inspire\",imageTag=\"${{ github.sha }}\",port=3002}]"'
     - name: Log Out From Azure
       run: |
         az logout
