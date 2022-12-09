@@ -24,7 +24,6 @@ jobs:
       with:
         scope: subscription
         region: ${{ env.LOCATION }}
-        subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
         deploymentName: 'micro-frontends-in-action-03-iac'
         template: ./bicep-modules/micro-frontends-in-action-infrastructure.bicep
         parameters: 'resourceGroupName=${{ env.RESOURCE_GROUP }} resourceGroupLocation=${{ env.LOCATION }} managedIdentityName=${{ env.MANAGED_IDENTITY }} containerRegistryName=${{ env.CONTAINER_REGISTRY }} containerAppsEnvironmentName=${{ env.CONTAINERAPPS_ENVIRONMENT }}'
