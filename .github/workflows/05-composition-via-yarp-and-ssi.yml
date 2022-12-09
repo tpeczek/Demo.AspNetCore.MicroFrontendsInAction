@@ -4,34 +4,38 @@ env:
   SAMPLE: 05-composition-via-yarp-and-ssi
   LOCATION: westeurope
   RESOURCE_GROUP: rg-micro-frontends-in-action-05
+  MANAGED_IDENTITY: id-micro-frontends-in-action-05
   CONTAINER_REGISTRY: crmicrofrontendsinaction05
   CONTAINERAPPS_ENVIRONMENT: ca-env-micro-frontends-in-action-05
   DECIDE_CONTAINERAPP: ca-app-decide
   INSPIRE_CONTAINERAPP: ca-app-inspire
   PROXY_CONTAINERAPP: ca-app-proxy
 jobs:
-  create-azure-resources:
+  deploy-infrastructure:
     runs-on: ubuntu-latest
     steps:
+    - name: Checkout
+      uses: actions/checkout@v2
     - name: Log in to Azure
       uses: azure/login@v1
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
-    - name: Create Resource Group
-      run: az group create -l ${LOCATION} -g ${RESOURCE_GROUP}
-    - name: Create Container Registry
-      run: az acr create -n ${CONTAINER_REGISTRY} -l ${LOCATION} -g ${RESOURCE_GROUP} --sku Basic
-    - name: Create Container Apps Enviroment
-      run: |
-        az extension add --n containerapp --upgrade
-        az containerapp env create -n ${CONTAINERAPPS_ENVIRONMENT} -l ${LOCATION} -g ${RESOURCE_GROUP}
+    - name: Deploy Bicep
+      uses: azure/arm-deploy@v1
+      with:
+        scope: subscription
+        region: ${{ env.LOCATION }}
+        subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
+        template: ./bicep-modules/micro-frontends-in-action-infrastructure.bicep
+        deploymentName: 'micro-frontends-in-action-05'
+        parameters: 'resourceGroupName=${{ env.RESOURCE_GROUP }} resourceGroupLocation=${{ env.LOCATION }} managedIdentityName=${{ env.MANAGED_IDENTITY }} containerRegistryName=${{ env.CONTAINER_REGISTRY }} containerAppsEnvironmentName=${{ env.CONTAINERAPPS_ENVIRONMENT }}'
     - name: Log Out From Azure
       run: |
         az logout
         az cache purge
         az account clear
-  build-and-push-images:
-    needs: [create-azure-resources]
+  deliver-images:
+    needs: [deploy-infrastructure]
     runs-on: ubuntu-latest
     steps:
     - name: Log in to Azure
@@ -58,8 +62,8 @@ jobs:
         az logout
         az cache purge
         az account clear
-  deploy-to-container-apps:
-    needs: [create-azure-resources, build-and-push-images]
+  deploy-container-apps:
+    needs: [deploy-infrastructure, deliver-images]
     runs-on: ubuntu-latest
     steps:
     - name: Log in to Azure
