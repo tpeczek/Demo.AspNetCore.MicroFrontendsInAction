@@ -78,7 +78,7 @@ jobs:
         resourceGroupName: ${{ env.RESOURCE_GROUP }}
         template: ./bicep-modules/micro-frontends-in-action-deployment.bicep
         deploymentName: 'micro-frontends-in-action-04-cd'
-        parameters: 'location=${{ env.LOCATION }} managedIdentityName=${{ env.MANAGED_IDENTITY }} containerRegistryName=${{ env.CONTAINER_REGISTRY }} containerAppsEnvironmentName=${{ env.CONTAINERAPPS_ENVIRONMENT }} microFrontendsContainerAppsDetails=\"[{name=\"${{ env.DECIDE_CONTAINERAPP }}\",imageName=\"decide\",imageTag=\"${{ github.sha }}\",port=3001\},\{name=\"${{ env.INSPIRE_CONTAINERAPP }}\",imageName=\"inspire\",imageTag=\"${{ github.sha }}\",port=3002\}]\"'
+        parameters: 'location=${{ env.LOCATION }} managedIdentityName=${{ env.MANAGED_IDENTITY }} containerRegistryName=${{ env.CONTAINER_REGISTRY }} containerAppsEnvironmentName=${{ env.CONTAINERAPPS_ENVIRONMENT }} microFrontendsContainerAppsDetails="[{name=\"${{ env.DECIDE_CONTAINERAPP }}\",imageName=\"decide\",imageTag=\"${{ github.sha }}\",port=3001\},\{name=\"${{ env.INSPIRE_CONTAINERAPP }}\",imageName=\"inspire\",imageTag=\"${{ github.sha }}\",port=3002\}]"'
     - name: Log Out From Azure
       run: |
         az logout
