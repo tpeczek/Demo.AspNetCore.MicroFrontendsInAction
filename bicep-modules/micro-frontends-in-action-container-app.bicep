@@ -37,8 +37,8 @@ resource containerApp 'Microsoft.App/containerApps@2022-06-01-preview' = {
     template: {
       containers: [
         {
-          image: '${containerRegistryName}.azurecr.io/${containerAppImageName}:${containerAppImageTag}'
           name: containerAppImageName
+          image: '${containerRegistryName}.azurecr.io/${containerAppImageName}:${containerAppImageTag}'
         }
       ]
       scale: {
