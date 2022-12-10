@@ -15,7 +15,7 @@ resource containerAppsEnvironment 'Microsoft.App/managedEnvironments@2022-06-01-
   name: containerAppsEnvironmentName
 }
 
-module microFrontendsContainerAppsFqdns 'micro-frontends-in-action-container-app.bicep' = [for microFrontendsContainerAppDetails in microFrontendsContainerAppsDetails: {
+module microFrontendsContainerApps 'micro-frontends-in-action-container-app.bicep' = [for microFrontendsContainerAppDetails in microFrontendsContainerAppsDetails: {
   name: '${microFrontendsContainerAppDetails.name}-deployment'
   scope: resourceGroup()
   params: {
@@ -30,43 +30,22 @@ module microFrontendsContainerAppsFqdns 'micro-frontends-in-action-container-app
   }
 }]
 
-resource microFrontendsProxyContainerApp 'Microsoft.App/containerApps@2022-06-01-preview' = {
-  name: microFrontendsProxyContainerAppDetails.name
-  location: location
-  identity: {
-    type: 'UserAssigned'
-    userAssignedIdentities: {
-      '${managedIdentity.id}': {}
-    }
-  }
-  properties:{
-    managedEnvironmentId: containerAppsEnvironment.id
-    configuration: {
-      ingress: {
-        targetPort: microFrontendsProxyContainerAppDetails.port
-        external: true
-      }
-      registries: [
-        {
-          identity: managedIdentity.id
-          server: '${containerRegistryName}.azurecr.io'
-        }
-      ]
-    }
-    template: {
-      containers: [
-        {
-          name: microFrontendsProxyContainerAppDetails.imageName
-          image: '${containerRegistryName}.azurecr.io/${microFrontendsProxyContainerAppDetails.imageName}:${microFrontendsProxyContainerAppDetails.imageTag}'
-          env: [for (microFrontendsContainerAppDetails, i) in microFrontendsContainerAppsDetails: {
-            name: microFrontendsContainerAppDetails.urlVariableName
-            value: 'https://${microFrontendsContainerAppsFqdns[i].outputs.containerAppFqdn}'
-          }]
-        }
-      ]
-      scale: {
-        minReplicas: 1
-      }
-    }
+module proxyContainerApp 'micro-frontends-in-action-container-app.bicep' = {
+  name: '${microFrontendsProxyContainerAppDetails.name}-deployment'
+  scope: resourceGroup()
+  params: {
+    location: location
+    containerAppName: microFrontendsProxyContainerAppDetails.name
+    containerAppImageName: microFrontendsProxyContainerAppDetails.imageName
+    containerAppImageTag: microFrontendsProxyContainerAppDetails.imageTag
+    containerAppPort: microFrontendsProxyContainerAppDetails.port
+    containerAppIngress: 'external'
+    containerAppEnvironmentVariables: [for (microFrontendsContainerAppDetails, i) in microFrontendsContainerAppsDetails: {
+      name: microFrontendsContainerAppDetails.urlVariableName
+      value: 'https://${microFrontendsContainerApps[i].outputs.containerAppFqdn}'
+    }]
+    managedIdentityId: managedIdentity.id
+    containerRegistryName: containerRegistryName
+    containerAppsEnvironmentId: containerAppsEnvironment.id
   }
 }
