@@ -26,7 +26,7 @@ jobs:
         scope: subscription
         region: ${{ env.LOCATION }}
         template: ./bicep-modules/micro-frontends-in-action-infrastructure.bicep
-        deploymentName: 'micro-frontends-in-action-05'
+        deploymentName: 'micro-frontends-in-action-05-iac'
         parameters: 'resourceGroupName=${{ env.RESOURCE_GROUP }} resourceGroupLocation=${{ env.LOCATION }} managedIdentityName=${{ env.MANAGED_IDENTITY }} containerRegistryName=${{ env.CONTAINER_REGISTRY }} containerAppsEnvironmentName=${{ env.CONTAINERAPPS_ENVIRONMENT }}'
     - name: Log Out From Azure
       run: |
@@ -77,7 +77,7 @@ jobs:
         scope: resourcegroup
         resourceGroupName: ${{ env.RESOURCE_GROUP }}
         template: ./bicep-modules/micro-frontends-in-action-deployment.bicep
-        deploymentName: 'micro-frontends-in-action-04-cd'
+        deploymentName: 'micro-frontends-in-action-05-cd'
         parameters: 'location=${{ env.LOCATION }} managedIdentityName=${{ env.MANAGED_IDENTITY }} containerRegistryName=${{ env.CONTAINER_REGISTRY }} containerAppsEnvironmentName=${{ env.CONTAINERAPPS_ENVIRONMENT }} microFrontendsContainerAppsDetails="[{\"name\":\"${{ env.DECIDE_CONTAINERAPP }}\",\"imageName\":\"decide\",\"imageTag\":\"${{ github.sha }}\",\"port\":3001,\"urlVariableName\":\"DECIDE_SERVICE_URL\"},{\"name\":\"${{ env.INSPIRE_CONTAINERAPP }}\",\"imageName\":\"inspire\",\"imageTag\":\"${{ github.sha }}\",\"port\":3002,\"urlVariableName\":\"INSPIRE_SERVICE_URL\"}]" microFrontendsProxyContainerAppDetails="{\"name\":\"${{ env.PROXY_CONTAINERAPP }}\",\"imageName\":\"proxy\",\"imageTag\":\"${{ github.sha }}\",\"port\":3000}"'
     - name: Log Out From Azure
       run: |
