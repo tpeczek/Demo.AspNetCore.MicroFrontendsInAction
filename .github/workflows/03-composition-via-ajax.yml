@@ -14,18 +14,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
     - name: Log in to Azure
       uses: azure/login@v1
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
-    - name: Deploy Bicep
+    - name: Deploy Infrastructure
       uses: azure/arm-deploy@v1
       with:
         scope: subscription
         region: ${{ env.LOCATION }}
-        subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
-        deploymentName: 'micro-frontends-in-action-03'
+        deploymentName: 'micro-frontends-in-action-03-iac'
         template: ./bicep-modules/micro-frontends-in-action-infrastructure.bicep
         parameters: 'resourceGroupName=${{ env.RESOURCE_GROUP }} resourceGroupLocation=${{ env.LOCATION }} managedIdentityName=${{ env.MANAGED_IDENTITY }} containerRegistryName=${{ env.CONTAINER_REGISTRY }} containerAppsEnvironmentName=${{ env.CONTAINERAPPS_ENVIRONMENT }}'
     - name: Log Out From Azure
@@ -37,14 +36,14 @@ jobs:
     needs: [deploy-infrastructure]
     runs-on: ubuntu-latest
     steps:
+    - name: Checkout
+      uses: actions/checkout@v3
     - name: Log in to Azure
       uses: azure/login@v1
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
     - name: Log in to Container Registry
       run: az acr login -n ${CONTAINER_REGISTRY}
-    - name: Checkout
-      uses: actions/checkout@v2
     - name: Build Docker Images
       run: |
         docker build ${SAMPLE}/Demo.AspNetCore.MicroFrontendsInAction.Decide/ -t ${CONTAINER_REGISTRY}.azurecr.io/decide:${{ github.sha }}

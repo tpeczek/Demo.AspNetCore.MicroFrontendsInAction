@@ -12,7 +12,7 @@ resource resourceGroupReference 'Microsoft.Resources/resourceGroups@2021-04-01' 
 }
 
 module resourceGroupModule 'micro-frontends-in-action-resource-group.bicep' = {
-  name: 'micro-frontends-in-action-rg'
+  name: '${resourceGroupName}-deployment'
   scope: resourceGroup(resourceGroupReference.name)
   params: {
     location: resourceGroupReference.location
