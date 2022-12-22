@@ -7,7 +7,7 @@ RUN dotnet restore
 COPY . .
 RUN dotnet publish -c Release -o /app/publish
 
-FROM mcr.microsoft.com/dotnet/aspnet:6.0-alpine
+FROM mcr.microsoft.com/dotnet/nightly/aspnet:6.0-jammy-chiseled
 WORKDIR /app
 COPY --from=build-env /app/publish .
 EXPOSE 3001
