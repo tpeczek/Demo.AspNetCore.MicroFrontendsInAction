@@ -7,9 +7,14 @@ COPY *.csproj ./
 RUN dotnet restore
 
 COPY . .
-RUN dotnet publish -c Release -o /app/publish
+RUN dotnet publish \
+  --runtime alpine-x64 \
+  --configuration Release \
+  --self-contained true \
+  --output /app/publish \
+  /p:PublishSingleFile=true
 
-FROM mcr.microsoft.com/dotnet/aspnet:$VERSION
+FROM mcr.microsoft.com/dotnet/runtime-deps:$VERSION
 RUN adduser \
   --disabled-password \
   --home /app \
@@ -22,4 +27,4 @@ ENV \
   DOTNET_RUNNING_IN_CONTAINER=true \
   ASPNETCORE_URLS=http://+:3000
 EXPOSE 3000
-ENTRYPOINT ["dotnet", "Demo.AspNetCore.MicroFrontendsInAction.Proxy.dll"]
+ENTRYPOINT ["./Demo.AspNetCore.MicroFrontendsInAction.Proxy", "--urls", "http://0.0.0.0:3000"]
