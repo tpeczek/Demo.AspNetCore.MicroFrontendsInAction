@@ -12,7 +12,8 @@ RUN dotnet publish \
   --configuration Release \
   --self-contained true \
   --output /app/publish \
-  /p:PublishSingleFile=true
+  /p:PublishSingleFile=true \
+  /p:PublishTrimmed=true
 
 FROM mcr.microsoft.com/dotnet/runtime-deps:$VERSION
 RUN adduser \
