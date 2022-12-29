@@ -1,4 +1,6 @@
-FROM mcr.microsoft.com/dotnet/sdk:6.0-alpine AS build-env
+ARG VERSION=6.0-alpine
+
+FROM mcr.microsoft.com/dotnet/sdk:$VERSION AS build-env
 WORKDIR /src
 
 COPY Frontend/*.csproj ./Frontend/
@@ -6,11 +8,24 @@ COPY Service/*.csproj ./Service/
 RUN dotnet restore Service
 
 COPY . .
-RUN dotnet publish Service -c Release -o /app/publish
+RUN dotnet publish Service \
+  --runtime alpine-x64 \
+  --configuration Release \
+  --self-contained true \
+  --output /app/publish \
+  /p:PublishTrimmed=true
 
-FROM mcr.microsoft.com/dotnet/aspnet:6.0-alpine
+FROM mcr.microsoft.com/dotnet/runtime-deps:$VERSION
+RUN adduser \
+  --disabled-password \
+  --home /app \
+  --gecos '' app \
+  && chown -R app /app
+USER app
 WORKDIR /app
 COPY --from=build-env /app/publish .
-EXPOSE 3001
-ENV ASPNETCORE_URLS=http://+:3003
-ENTRYPOINT ["dotnet", "Demo.AspNetCore.MicroFrontendsInAction.Checkout.dll"]
+ENV \
+  DOTNET_RUNNING_IN_CONTAINER=true \
+  ASPNETCORE_URLS=http://+:3003
+EXPOSE 3003
+ENTRYPOINT ["./Demo.AspNetCore.MicroFrontendsInAction.Checkout", "--urls", "http://0.0.0.0:3003"]
