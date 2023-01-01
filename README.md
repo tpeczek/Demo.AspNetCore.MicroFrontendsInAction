@@ -14,6 +14,6 @@ My blog and open source projects are result of my passion for software developme
 
 ## Copyright and License
 
-Copyright © 2022 Tomasz Pęczek
+Copyright © 2022 - 2023 Tomasz Pęczek
 
 Licensed under the [MIT License](https://github.com/tpeczek/Demo.AspNetCore.MicroFrontendsInAction/blob/master/LICENSE.md)
