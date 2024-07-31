@@ -4,10 +4,10 @@
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,
-      "applicationUrl": "http://localhost:3001",
+      "applicationUrl": "https://localhost:3001",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "INSPIRE_SERVICE_URL": "http://localhost:3002"
+        "INSPIRE_SERVICE_URL": "https://localhost:3002"
       }
     }
   }
