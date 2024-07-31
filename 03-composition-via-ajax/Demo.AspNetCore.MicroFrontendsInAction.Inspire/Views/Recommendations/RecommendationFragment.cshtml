@@ -1,0 +1,14 @@
+﻿@using Microsoft.Extensions.Configuration
+@inject IConfiguration Configuration
+@{string decideServiceUrl = Configuration["DECIDE_SERVICE_URL"];}
+@model Demo.AspNetCore.MicroFrontendsInAction.Inspire.Models.RecommendationViewModel
+<link href="@("https://" + Context.Request.Host + "/static/fragment.css")" rel="stylesheet" />
+<div class="inspire_fragment">
+  <h2 class="inspire_headline">Recommendations</h2>
+  <div class="inspire_recommendations">
+    @foreach (string productId in Model.ProductsIds)
+    {
+        <a href="@(decideServiceUrl + "/product/" + productId)"><img src="https://mi-fr.org/img/@(productId).svg" /></a>
+    }
+  </div>
+</div>

@@ -1,6 +1,7 @@
 ﻿@using Microsoft.Extensions.Configuration
 @inject IConfiguration Configuration
 @{string decideServiceUrl = Configuration["DECIDE_SERVICE_URL"];}
+@model Demo.AspNetCore.MicroFrontendsInAction.Inspire.Models.RecommendationViewModel
 <html>
   <head>
     <title>Recommendations</title>
@@ -11,12 +12,12 @@
     <h1 class="inspire_header">The Tractor Store</h1>
     <h2 class="inspire_headline">Recommendations</h2>
     <div class="inspire_recommendations">
-      <a href="@(decideServiceUrl + "/product/eicher")" target="_parent">
-        <img src="https://mi-fr.org/img/eicher.svg" />
-      </a>
-      <a href="@(decideServiceUrl + "/product/porsche")" target="_parent">
-        <img src="https://mi-fr.org/img/porsche.svg" />
-      </a>
+      @foreach (string productId in Model.ProductsIds)
+      {
+        <a href="@(decideServiceUrl + "/product/" + productId)" target="_parent">
+          <img src="https://mi-fr.org/img/@(productId).svg" />
+        </a>
+      }
     </div>
   </body>
 </html>
