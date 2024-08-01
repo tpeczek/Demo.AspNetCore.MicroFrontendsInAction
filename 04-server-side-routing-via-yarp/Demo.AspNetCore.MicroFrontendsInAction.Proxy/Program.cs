@@ -1,13 +1,11 @@
-using Demo.AspNetCore.MicroFrontendsInAction.Proxy;
-
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddHttpForwarder();
 
 var app = builder.Build();
 
-string decideServiceUrl = app.Configuration["DECIDE_SERVICE_URL"];
-string inspireServiceUrl = app.Configuration["INSPIRE_SERVICE_URL"];
+string decideServiceUrl = app.Configuration["DECIDE_SERVICE_URL"] ?? String.Empty;
+string inspireServiceUrl = app.Configuration["INSPIRE_SERVICE_URL"] ?? String.Empty;
 
 // Per service prefixes
 app.MapForwarder("/", decideServiceUrl);

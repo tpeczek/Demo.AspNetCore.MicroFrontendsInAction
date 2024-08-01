@@ -1,22 +1,20 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Demo.AspNetCore.MicroFrontendsInAction.Decide.Models;
 
 namespace Demo.AspNetCore.MicroFrontendsInAction.Decide.Controllers
 {
     public class ProductsController : Controller
     {
-        public IActionResult Eicher()
+        private static readonly IReadOnlyDictionary<string, ProductViewModel> _products = new Dictionary<string, ProductViewModel>
         {
-            return View();
-        }
+            { "eicher", new ProductViewModel("eicher", "Eicher Diesel 215/16") },
+            { "fendt", new ProductViewModel("fendt", "Fendt F20 Dieselroß") },
+            { "porsche", new ProductViewModel("porsche", "Porsche-Diesel Master 419") }
+        };
 
-        public IActionResult Fendt()
+        public IActionResult Product(string id)
         {
-            return View();
-        }
-
-        public IActionResult Porsche()
-        {
-            return View();
+            return View(_products[id.ToLowerInvariant()]);
         }
     }
 }
