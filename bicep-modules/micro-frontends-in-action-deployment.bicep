@@ -42,7 +42,7 @@ module proxyContainerApp 'micro-frontends-in-action-container-app.bicep' = {
     containerAppIngress: 'external'
     containerAppEnvironmentVariables: [for (microFrontendsContainerAppDetails, i) in microFrontendsContainerAppsDetails: {
       name: microFrontendsContainerAppDetails.urlVariableName
-      value: 'https://${microFrontendsContainerApps[i].outputs.containerAppFqdn}'
+      value: 'http://${microFrontendsContainerAppDetails.name}'
     }]
     managedIdentityId: managedIdentity.id
     containerRegistryName: containerRegistryName
