@@ -7,7 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Demo.AspNetCore.MicroFronte
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Demo.AspNetCore.MicroFrontendsInAction.Inspire", "Demo.AspNetCore.MicroFrontendsInAction.Inspire\Demo.AspNetCore.MicroFrontendsInAction.Inspire.csproj", "{E61B0C28-0441-46A8-BDDD-D5CBCE8964A0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo.AspNetCore.MicroFrontendsInAction.Proxy", "Demo.AspNetCore.MicroFrontendsInAction.Proxy\Demo.AspNetCore.MicroFrontendsInAction.Proxy.csproj", "{3014E044-A0D8-4961-91C6-2DE80157C22B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Demo.AspNetCore.MicroFrontendsInAction.Proxy", "Demo.AspNetCore.MicroFrontendsInAction.Proxy\Demo.AspNetCore.MicroFrontendsInAction.Proxy.csproj", "{3014E044-A0D8-4961-91C6-2DE80157C22B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo.AspNetCore.MicroFrontendsInAction.AppHost", "Demo.AspNetCore.MicroFrontendsInAction.AppHost\Demo.AspNetCore.MicroFrontendsInAction.AppHost.csproj", "{70C2B708-9BA9-4D49-B523-7F094B9EAB72}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{3014E044-A0D8-4961-91C6-2DE80157C22B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3014E044-A0D8-4961-91C6-2DE80157C22B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3014E044-A0D8-4961-91C6-2DE80157C22B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{70C2B708-9BA9-4D49-B523-7F094B9EAB72}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{70C2B708-9BA9-4D49-B523-7F094B9EAB72}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{70C2B708-9BA9-4D49-B523-7F094B9EAB72}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{70C2B708-9BA9-4D49-B523-7F094B9EAB72}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
