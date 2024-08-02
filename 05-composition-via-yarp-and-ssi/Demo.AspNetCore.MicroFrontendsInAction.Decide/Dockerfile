@@ -1,4 +1,4 @@
-ARG VERSION=6.0-alpine
+ARG VERSION=8.0-alpine
 
 FROM mcr.microsoft.com/dotnet/sdk:$VERSION AS build-env
 WORKDIR /src
@@ -8,19 +8,13 @@ RUN dotnet restore
 
 COPY . .
 RUN dotnet publish \
-  --runtime alpine-x64 \
+  --runtime linux-musl-x64 \
   --configuration Release \
   --self-contained true \
   --output /app/publish \
-  /p:PublishSingleFile=true \
-  /p:PublishTrimmed=true
+  /p:PublishSingleFile=true
 
 FROM mcr.microsoft.com/dotnet/runtime-deps:$VERSION
-RUN adduser \
-  --disabled-password \
-  --home /app \
-  --gecos '' app \
-  && chown -R app /app
 USER app
 WORKDIR /app
 COPY --from=build-env /app/publish .
