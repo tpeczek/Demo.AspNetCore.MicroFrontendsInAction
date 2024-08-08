@@ -12,8 +12,13 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Demo.AspNetCore.MicroFrontendsInAction.Checkout.Frontend", "Demo.AspNetCore.MicroFrontendsInAction.Checkout\Frontend\Demo.AspNetCore.MicroFrontendsInAction.Checkout.Frontend.csproj", "{3E6D06BA-CE96-4DC6-A6D8-2C6BAE73E1B8}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Demo.AspNetCore.MicroFrontendsInAction.Checkout", "Demo.AspNetCore.MicroFrontendsInAction.Checkout", "{C72F2821-B79A-41B1-A9D4-12D438009B66}"
+	ProjectSection(SolutionItems) = preProject
+		Demo.AspNetCore.MicroFrontendsInAction.Checkout\Dockerfile = Demo.AspNetCore.MicroFrontendsInAction.Checkout\Dockerfile
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Demo.AspNetCore.MicroFrontendsInAction.Checkout", "Demo.AspNetCore.MicroFrontendsInAction.Checkout\Service\Demo.AspNetCore.MicroFrontendsInAction.Checkout.csproj", "{7E0B7CB4-C77E-4D3C-BFCF-EC552D5F8ACB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo.AspNetCore.MicroFrontendsInAction.AppHost", "Demo.AspNetCore.MicroFrontendsInAction.AppHost\Demo.AspNetCore.MicroFrontendsInAction.AppHost.csproj", "{BC333A11-D963-460B-9D44-9CB4AF0EAB24}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,6 +46,10 @@ Global
 		{7E0B7CB4-C77E-4D3C-BFCF-EC552D5F8ACB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7E0B7CB4-C77E-4D3C-BFCF-EC552D5F8ACB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7E0B7CB4-C77E-4D3C-BFCF-EC552D5F8ACB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BC333A11-D963-460B-9D44-9CB4AF0EAB24}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BC333A11-D963-460B-9D44-9CB4AF0EAB24}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BC333A11-D963-460B-9D44-9CB4AF0EAB24}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BC333A11-D963-460B-9D44-9CB4AF0EAB24}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
