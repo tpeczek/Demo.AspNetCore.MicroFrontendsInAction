@@ -1,9 +1,12 @@
 ﻿using EsiNet;
 using EsiNet.Pipeline;
 using EsiNet.Fragments;
-using Microsoft.Extensions.DependencyInjection.Extensions;
-using EsiNet.Fragments.Composite;
 using EsiNet.Fragments.Text;
+using EsiNet.Fragments.Vars;
+using EsiNet.Fragments.Choose;
+using EsiNet.Fragments.Ignore;
+using EsiNet.Fragments.Composite;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Demo.AspNetCore.MicroFrontendsInAction.Proxy
 {
@@ -30,11 +33,11 @@ namespace Demo.AspNetCore.MicroFrontendsInAction.Proxy
             esiFragmentParsers["esi:text"] = new EsiTextParser();
 
             //esiFragmentParsers["esi:include"] = new EsiIncludeParser();
-            //esiFragmentParsers["esi:choose"] = new EsiChooseParser(esiBodyParser);
+            esiFragmentParsers["esi:choose"] = new EsiChooseParser(esiBodyParser);
             //esiFragmentParsers["esi:try"] = new EsiTryParser(esiBodyParser);
-            //esiFragmentParsers["esi:comment"] = new EsiIgnoreParser();
-            //esiFragmentParsers["esi:remove"] = new EsiIgnoreParser();
-            //esiFragmentParsers["esi:vars"] = new EsiVarsParser();
+            esiFragmentParsers["esi:comment"] = new EsiIgnoreParser();
+            esiFragmentParsers["esi:remove"] = new EsiIgnoreParser();
+            esiFragmentParsers["esi:vars"] = new EsiVarsParser();
 
             return esiBodyParser;
         }
@@ -51,6 +54,15 @@ namespace Demo.AspNetCore.MicroFrontendsInAction.Proxy
 
             var esiTextExecutor = new EsiTextFragmentExecutor();
             esiExecutors[typeof(EsiTextFragment)] = (f, ec) => esiTextExecutor.Execute((EsiTextFragment)f, ec);
+
+            var esiIgnoreExecutor = new EsiIgnoreFragmentExecutor();
+            esiExecutors[typeof(EsiIgnoreFragment)] = (f, ec) => esiIgnoreExecutor.Execute((EsiIgnoreFragment)f, ec);
+
+            var esiChooseExecutor = new EsiChooseFragmentExecutor(esiFragmentExecutor);
+            esiExecutors[typeof(EsiChooseFragment)] = (f, ec) => esiChooseExecutor.Execute((EsiChooseFragment)f, ec);
+
+            var esiVarsExecutor = new EsiVarsFragmentExecutor();
+            esiExecutors[typeof(EsiVarsFragment)] = (f, ec) => esiVarsExecutor.Execute((EsiVarsFragment)f, ec);
 
             return esiFragmentExecutor;
         }
