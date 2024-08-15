@@ -1,12 +1,16 @@
 ﻿using EsiNet;
+using EsiNet.Logging;
 using EsiNet.Pipeline;
 using EsiNet.Fragments;
+using EsiNet.Fragments.Try;
 using EsiNet.Fragments.Text;
 using EsiNet.Fragments.Vars;
 using EsiNet.Fragments.Choose;
 using EsiNet.Fragments.Ignore;
 using EsiNet.Fragments.Composite;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+
+using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 
 namespace Demo.AspNetCore.MicroFrontendsInAction.Proxy
 {
@@ -34,7 +38,7 @@ namespace Demo.AspNetCore.MicroFrontendsInAction.Proxy
 
             //esiFragmentParsers["esi:include"] = new EsiIncludeParser();
             esiFragmentParsers["esi:choose"] = new EsiChooseParser(esiBodyParser);
-            //esiFragmentParsers["esi:try"] = new EsiTryParser(esiBodyParser);
+            esiFragmentParsers["esi:try"] = new EsiTryParser(esiBodyParser);
             esiFragmentParsers["esi:comment"] = new EsiIgnoreParser();
             esiFragmentParsers["esi:remove"] = new EsiIgnoreParser();
             esiFragmentParsers["esi:vars"] = new EsiVarsParser();
@@ -61,10 +65,32 @@ namespace Demo.AspNetCore.MicroFrontendsInAction.Proxy
             var esiChooseExecutor = new EsiChooseFragmentExecutor(esiFragmentExecutor);
             esiExecutors[typeof(EsiChooseFragment)] = (f, ec) => esiChooseExecutor.Execute((EsiChooseFragment)f, ec);
 
+            var esiTryExecutor = new EsiTryFragmentExecutor(esiFragmentExecutor, CreateEsiTryExecutorLog(serviceProvider));
+            esiExecutors[typeof(EsiTryFragment)] = (f, ec) => esiTryExecutor.Execute((EsiTryFragment)f, ec);
+
             var esiVarsExecutor = new EsiVarsFragmentExecutor();
             esiExecutors[typeof(EsiVarsFragment)] = (f, ec) => esiVarsExecutor.Execute((EsiVarsFragment)f, ec);
 
             return esiFragmentExecutor;
+        }
+
+        private static Log CreateEsiTryExecutorLog(IServiceProvider serviceProvider)
+        {
+            var esiTryExecutorLogger = serviceProvider.GetRequiredService<ILogger<EsiTryFragmentExecutor>>();
+
+            return (esiLogLevel, exception, message) =>
+            {
+                LogLevel logLevel = esiLogLevel switch
+                {
+                    EsiNet.Logging.LogLevel.Debug => LogLevel.Debug,
+                    EsiNet.Logging.LogLevel.Information => LogLevel.Information,
+                    EsiNet.Logging.LogLevel.Warning => LogLevel.Warning,
+                    EsiNet.Logging.LogLevel.Error => LogLevel.Error,
+                    _ => throw new NotSupportedException($"Unknown ESI log level '{esiLogLevel}'.")
+                };
+
+                esiTryExecutorLogger.Log(logLevel, exception, message());
+            };
         }
     }
 }
