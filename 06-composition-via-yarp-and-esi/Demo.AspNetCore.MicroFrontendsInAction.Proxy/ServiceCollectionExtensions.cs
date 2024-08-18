@@ -1,4 +1,6 @@
 ﻿using EsiNet;
+using EsiNet.Http;
+using EsiNet.Caching;
 using EsiNet.Logging;
 using EsiNet.Pipeline;
 using EsiNet.Fragments;
@@ -7,8 +9,11 @@ using EsiNet.Fragments.Text;
 using EsiNet.Fragments.Vars;
 using EsiNet.Fragments.Choose;
 using EsiNet.Fragments.Ignore;
+using EsiNet.Fragments.Include;
 using EsiNet.Fragments.Composite;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Demo.AspNetCore.MicroFrontendsInAction.Proxy.Http;
+using Demo.AspNetCore.MicroFrontendsInAction.Proxy.Caching;
 
 using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 
@@ -18,6 +23,17 @@ namespace Demo.AspNetCore.MicroFrontendsInAction.Proxy
     {
         public static IServiceCollection AddEsi(this IServiceCollection services)
         {
+            services.TryAddSingleton(CreateEsiLog);
+
+            services.TryAddSingleton<IEsiFragmentCache, EsiNoOpFragmentCache>();
+            services.TryAddSingleton<IVaryHeaderStore, EsiNoOpVaryHeaderStore>();
+            services.TryAddSingleton<EsiFragmentCacheFacade>();
+
+            services.TryAddSingleton<ClusterEsiHttpClientFactory>(serviceProvider => new ClusterEsiHttpClientFactory(serviceProvider));
+            services.TryAddSingleton<EsiHttpClientFactory>(serviceProvider => serviceProvider.GetRequiredService<ClusterEsiHttpClientFactory>().ProduceHttpClient);
+            services.TryAddSingleton<HttpRequestMessageFactory>(DefaultHttpRequestMessageFactory.Create);
+            services.TryAddSingleton<IHttpLoader, EsiHttpLoader>();
+
             services.TryAddSingleton<EsiBodyParser>(CreateEsiBodyParser);
             services.TryAddSingleton<EsiFragmentExecutor>(CreateEsiFragmentExecutor);
 
@@ -36,7 +52,7 @@ namespace Demo.AspNetCore.MicroFrontendsInAction.Proxy
 
             esiFragmentParsers["esi:text"] = new EsiTextParser();
 
-            //esiFragmentParsers["esi:include"] = new EsiIncludeParser();
+            esiFragmentParsers["esi:include"] = new EsiIncludeParser();
             esiFragmentParsers["esi:choose"] = new EsiChooseParser(esiBodyParser);
             esiFragmentParsers["esi:try"] = new EsiTryParser(esiBodyParser);
             esiFragmentParsers["esi:comment"] = new EsiIgnoreParser();
@@ -62,10 +78,18 @@ namespace Demo.AspNetCore.MicroFrontendsInAction.Proxy
             var esiIgnoreExecutor = new EsiIgnoreFragmentExecutor();
             esiExecutors[typeof(EsiIgnoreFragment)] = (f, ec) => esiIgnoreExecutor.Execute((EsiIgnoreFragment)f, ec);
 
+            var esiIncludeExecutor = new EsiIncludeFragmentExecutor(
+                serviceProvider.GetRequiredService<ClusterEsiHttpClientFactory>().ParseUri,
+                serviceProvider.GetRequiredService<EsiFragmentCacheFacade>(),
+                serviceProvider.GetRequiredService<IHttpLoader>(),
+                serviceProvider.GetRequiredService<EsiBodyParser>(),
+                esiFragmentExecutor);
+            esiExecutors[typeof(EsiIncludeFragment)] = (f, ec) => esiIncludeExecutor.Execute((EsiIncludeFragment)f, ec);
+
             var esiChooseExecutor = new EsiChooseFragmentExecutor(esiFragmentExecutor);
             esiExecutors[typeof(EsiChooseFragment)] = (f, ec) => esiChooseExecutor.Execute((EsiChooseFragment)f, ec);
 
-            var esiTryExecutor = new EsiTryFragmentExecutor(esiFragmentExecutor, CreateEsiTryExecutorLog(serviceProvider));
+            var esiTryExecutor = new EsiTryFragmentExecutor(esiFragmentExecutor, serviceProvider.GetRequiredService<Log>());
             esiExecutors[typeof(EsiTryFragment)] = (f, ec) => esiTryExecutor.Execute((EsiTryFragment)f, ec);
 
             var esiVarsExecutor = new EsiVarsFragmentExecutor();
@@ -74,9 +98,9 @@ namespace Demo.AspNetCore.MicroFrontendsInAction.Proxy
             return esiFragmentExecutor;
         }
 
-        private static Log CreateEsiTryExecutorLog(IServiceProvider serviceProvider)
+        private static Log CreateEsiLog(IServiceProvider serviceProvider)
         {
-            var esiTryExecutorLogger = serviceProvider.GetRequiredService<ILogger<EsiTryFragmentExecutor>>();
+            var esiLogger = serviceProvider.GetRequiredService<ILoggerFactory>().CreateLogger("ESI");
 
             return (esiLogLevel, exception, message) =>
             {
@@ -89,7 +113,7 @@ namespace Demo.AspNetCore.MicroFrontendsInAction.Proxy
                     _ => throw new NotSupportedException($"Unknown ESI log level '{esiLogLevel}'.")
                 };
 
-                esiTryExecutorLogger.Log(logLevel, exception, message());
+                esiLogger.Log(logLevel, exception, message());
             };
         }
     }
