@@ -1,0 +1,20 @@
+﻿@model Demo.AspNetCore.MicroFrontendsInAction.Inspire.Models.RecommendationViewModel
+<html>
+  <head>
+    <title>Recommendations</title>
+    <link href="/inspire/static/page.css" rel="stylesheet" />
+    <link href="/inspire/static/outlines.css" rel="stylesheet" />
+  </head>
+  <body class="inspire_layout">
+    <h1 class="inspire_header">The Tractor Store</h1>
+    <h2 class="inspire_headline">Recommendations</h2>
+    <div class="inspire_recommendations">
+      @foreach (string productId in Model.ProductsIds)
+      {
+        <a href="/product/@(productId)" target="_parent">
+          <img src="https://mi-fr.org/img/@(productId).svg" />
+        </a>
+      }
+    </div>
+  </body>
+</html>

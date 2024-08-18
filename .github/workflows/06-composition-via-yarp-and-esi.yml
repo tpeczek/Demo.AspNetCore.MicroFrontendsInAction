@@ -1,0 +1,95 @@
+name: 06-composition-via-yarp-and-esi
+on: workflow_dispatch
+permissions:
+  id-token: write
+  contents: read
+env:
+  SAMPLE: 06-composition-via-yarp-and-esi
+  LOCATION: westeurope
+  RESOURCE_GROUP: rg-micro-frontends-in-action-06
+  MANAGED_IDENTITY: id-micro-frontends-in-action-06
+  CONTAINER_REGISTRY: crmicrofrontendsinaction06
+  CONTAINERAPPS_ENVIRONMENT: ca-env-micro-frontends-in-action-06
+  DECIDE_CONTAINERAPP: ca-app-decide
+  INSPIRE_CONTAINERAPP: ca-app-inspire
+  PROXY_CONTAINERAPP: ca-app-proxy
+jobs:
+  deploy-infrastructure:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+    - name: Log in to Azure
+      uses: azure/login@v2
+      with:
+        client-id: ${{ secrets.AZURE_CLIENT_ID }}
+        tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+        subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+    - name: Deploy Infrastructure
+      uses: azure/arm-deploy@v2
+      with:
+        scope: subscription
+        region: ${{ env.LOCATION }}
+        template: ./bicep-modules/micro-frontends-in-action-infrastructure.bicep
+        deploymentName: 'micro-frontends-in-action-05-iac'
+        parameters: 'resourceGroupName=${{ env.RESOURCE_GROUP }} resourceGroupLocation=${{ env.LOCATION }} managedIdentityName=${{ env.MANAGED_IDENTITY }} containerRegistryName=${{ env.CONTAINER_REGISTRY }} containerAppsEnvironmentName=${{ env.CONTAINERAPPS_ENVIRONMENT }}'
+    - name: Log Out From Azure
+      run: |
+        az logout
+        az cache purge
+        az account clear
+  deliver-images:
+    needs: [deploy-infrastructure]
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+    - name: Log in to Azure
+      uses: azure/login@v2
+      with:
+        client-id: ${{ secrets.AZURE_CLIENT_ID }}
+        tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+        subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+    - name: Log in to Container Registry
+      run: az acr login -n ${CONTAINER_REGISTRY}
+    - name: Build Docker Images
+      run: |
+        docker build ${SAMPLE}/Demo.AspNetCore.MicroFrontendsInAction.Decide/ -t ${CONTAINER_REGISTRY}.azurecr.io/decide:${{ github.sha }}
+        docker build ${SAMPLE}/Demo.AspNetCore.MicroFrontendsInAction.Inspire/ -t ${CONTAINER_REGISTRY}.azurecr.io/inspire:${{ github.sha }}
+        docker build ${SAMPLE}/Demo.AspNetCore.MicroFrontendsInAction.Proxy/ -t ${CONTAINER_REGISTRY}.azurecr.io/proxy:${{ github.sha }}
+    - name: Push Docker Images to Container Registry
+      run: |
+        docker push ${CONTAINER_REGISTRY}.azurecr.io/decide:${{ github.sha }}
+        docker push ${CONTAINER_REGISTRY}.azurecr.io/inspire:${{ github.sha }}
+        docker push ${CONTAINER_REGISTRY}.azurecr.io/proxy:${{ github.sha }}
+    - name: Log Out From Azure
+      run: |
+        docker logout
+        az logout
+        az cache purge
+        az account clear
+  deploy-container-apps:
+    needs: [deploy-infrastructure, deliver-images]
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+    - name: Log in to Azure
+      uses: azure/login@v2
+      with:
+        client-id: ${{ secrets.AZURE_CLIENT_ID }}
+        tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+        subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+    - name: Deploy Container Apps
+      uses: azure/arm-deploy@v2
+      with:
+        scope: resourcegroup
+        resourceGroupName: ${{ env.RESOURCE_GROUP }}
+        template: ./bicep-modules/micro-frontends-in-action-deployment.bicep
+        deploymentName: 'micro-frontends-in-action-05-cd'
+        parameters: 'location=${{ env.LOCATION }} managedIdentityName=${{ env.MANAGED_IDENTITY }} containerRegistryName=${{ env.CONTAINER_REGISTRY }} containerAppsEnvironmentName=${{ env.CONTAINERAPPS_ENVIRONMENT }} microFrontendsContainerAppsDetails="[{\"name\":\"${{ env.DECIDE_CONTAINERAPP }}\",\"imageName\":\"decide\",\"imageTag\":\"${{ github.sha }}\",\"port\":3001,\"urlVariableName\":\"DECIDE_SERVICE_URL\"},{\"name\":\"${{ env.INSPIRE_CONTAINERAPP }}\",\"imageName\":\"inspire\",\"imageTag\":\"${{ github.sha }}\",\"port\":3002,\"urlVariableName\":\"INSPIRE_SERVICE_URL\"}]" microFrontendsProxyContainerAppDetails="{\"name\":\"${{ env.PROXY_CONTAINERAPP }}\",\"imageName\":\"proxy\",\"imageTag\":\"${{ github.sha }}\",\"port\":3000}"'
+    - name: Log Out From Azure
+      run: |
+        az logout
+        az cache purge
+        az account clear
